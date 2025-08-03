@@ -1,7 +1,8 @@
 ### Docker 명령어 요약
 
-# frontend 이미지 삭제
+# docker images delete
 sudo docker rmi -f traffic_id_tracking_search_project-frontend:latest
+sudo docker rmi -f traffic_id_tracking_search_project-backend:latest
 
 # 미사용 이미지 정리
 sudo docker image prune
