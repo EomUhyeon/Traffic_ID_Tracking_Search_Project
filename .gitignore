@@ -1,4 +1,6 @@
 
+# test_project 폴더 제외
+test_project/
 
-# test 폴더 제외
-test/
+# save 폴더 제외
+local_save/

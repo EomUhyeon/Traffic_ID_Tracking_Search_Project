@@ -1,0 +1,39 @@
+# docker-compose 파일 버전
+version: '3.8'
+
+services:
+  # 1. 프론트엔드 서비스
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/frontend
+    depends_on:
+      - backend
+
+  # 2. 백엔드 서비스
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - triton
+
+  # 3. 트리톤 서비스
+  triton:
+    build: ./triton
+    shm_size: '1g'   # 공유 메모리 크기 설정
+    ports:
+      - "8000:8000"  # HTTP 포트
+      - "8001:8001"  # gRPC 포트
+      - "8002:8002"  # Metrics 포트
+    deploy:          # GPU 사용을 위한 설정
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
