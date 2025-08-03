@@ -2,30 +2,30 @@
 version: '3.8'
 
 services:
-  # 1. 프론트엔드 서비스
   frontend:
     build: ./frontend
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/frontend
+      - ./frontend/src:/frontend/src
     depends_on:
       - backend
 
-  # 2. 백엔드 서비스
   backend:
     build: ./backend
     ports:
       - "5001:5000"
     volumes:
       - ./backend:/backend
+    environment:
+      - DATABASE_URL=mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
     depends_on:
       - triton
+      - database
 
-  # 3. 트리톤 서비스
   triton:
     build: ./triton
-    shm_size: '1g'   # 공유 메모리 크기 설정
+    shm_size: '1g'
     ports:
       - "8000:8000"  # HTTP 포트
       - "8001:8001"  # gRPC 포트
@@ -37,3 +37,16 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+
+  database:
+    image: mariadb:10.6
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MARIADB_DATABASE: "${MYSQL_DATABASE}"
+      MARIADB_USER: "${MYSQL_USER}"
+      MARIADB_PASSWORD: "${MYSQL_PASSWORD}"
+    volumes:
+      - ./mariadb/data:/var/lib/mysql
+    ports:
+      - "3306:3306"

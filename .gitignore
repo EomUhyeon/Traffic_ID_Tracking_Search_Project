@@ -1,8 +1,8 @@
+# .env 파일 제외
+.env
+
 # 데이터베이스 폴더 제외
 mariadb/
 
-# test_project 폴더 제외
-test_project/
-
-# save 폴더 제외
+# local_save 폴더 제외
 local_save/
